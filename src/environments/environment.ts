@@ -2,8 +2,20 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+declare const require: any;
+
 export const environment = {
-  production: false
+  production: false,
+  appCode: "en-us",
+  apiUrl: "http://192.168.22.53:4211/assets/mockdata/",
+  appUrl: "http://192.168.22.53:4211/",
+  package: require('../../package.json'),
+  paypal: {
+    mode: 'sandbox',
+    sandboxClientId: 'AW35MxsELLQji9DqLDeEK0wd7O1CjeBIVdlE1xs4p0VNQtaC9h-xzDY_lZFEm-4lmxQ-C6sT9uvCbiqr',
+    productionClientId: '',
+    currency: 'USD'
+  }
 };
 
 /*

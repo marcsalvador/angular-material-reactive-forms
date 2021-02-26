@@ -1,0 +1,44 @@
+<form *ngIf="cartForm!=undefined" [formGroup]="cartForm" autocomplete="off" novalidate (ngSubmit)="submit()">
+
+    <mat-card>
+        <mat-card-content>
+            <mat-form-field>
+                <mat-label>Search Goods</mat-label>
+                <input type="text" placeholder="" formControlName="itemName" [formControl]="myControl" matInput
+                    [matAutocomplete]="auto">
+                <input type="hidden" formControlName="itemId">
+                <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option.name"
+                        (click)="setItemId(option.itemId)">
+                        <b>{{option.name}}</b><span style="float:right">{{option.unitPrice | currency}}</span>
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </mat-card-content>
+    </mat-card>
+    <mat-card *ngIf="showQuantity">
+        <mat-card-header>
+            <div mat-card-avatar class="example-header-image"></div>
+            <mat-card-title>{{selectedProduct.name}}</mat-card-title>
+        </mat-card-header>
+        <img mat-card-image [src]="selectedProduct.image" alt="Photo of a Shiba Inu">
+        <mat-card-content>
+            <p [innerHTML]="selectedProduct.description"></p>
+            <mat-form-field>
+                <mat-label>Price per {{selectedMeasureTypes.displayName}}</mat-label>
+                <input type="text" readonly min="1" matInput placeholder=""
+                    value="{{selectedProduct.unitPrice | currency}}">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Enter No. of {{selectedMeasureTypes.displayName}}</mat-label>
+                <input type="text" matInput formControlName="quantity" (change)="onQuantityChanged($event)">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Total Amount</mat-label>
+                <input type="text" min="1" matInput readonly placeholder="" value="{{totalAmount | currency}}">
+            </mat-form-field>
+        </mat-card-content>
+    </mat-card>
+    <div style="margin: 10px;" class="text-center" id="singleSmartButton"></div>
+    <br>
+</form>

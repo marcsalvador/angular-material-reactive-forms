@@ -1,0 +1,20 @@
+[
+    {
+        "measureTypeId": "1",
+        "unit": "pcs",
+        "displayName": "Quantity",
+        "allowDecimal": "false"
+    },
+    {
+        "measureTypeId": "2",
+        "unit": "kg",
+        "displayName": "Kilogram",
+        "allowDecimal": "true"
+    },
+    {
+        "measureTypeId": "3",
+        "unit": "ltr",
+        "displayName": "Liter",
+        "allowDecimal": "true"
+    }
+]
