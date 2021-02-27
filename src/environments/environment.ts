@@ -10,7 +10,7 @@ export const environment = {
   apiUrl: "http://192.168.22.53:4211/assets/mockdata/",
   appUrl: "http://192.168.22.53:4211/",
   package: require('../../package.json'),
-  googleBrowserKey: '[]',
+  googleBrowserKey:  '',
   paypal: {
     mode: 'sandbox',
     sandboxClientId: 'AW35MxsELLQji9DqLDeEK0wd7O1CjeBIVdlE1xs4p0VNQtaC9h-xzDY_lZFEm-4lmxQ-C6sT9uvCbiqr',
