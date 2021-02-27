@@ -1,24 +1,27 @@
-<form *ngIf="cartForm!=undefined" [formGroup]="cartForm" autocomplete="off" novalidate (ngSubmit)="submit()">
+<ngx-spinner type="ball-square-spin" size="medium">
+    <p style="color: white"> Please wait while processing your payment... </p>
+</ngx-spinner>
 
+<form *ngIf="cartForm!=undefined" [formGroup]="cartForm">
     <mat-card>
         <mat-card-content>
             <mat-form-field>
                 <mat-label>Search Goods</mat-label>
-                <input type="text" placeholder="" formControlName="itemName" [formControl]="myControl" matInput
-                    [matAutocomplete]="auto">
+                <input type="text" [formControl]="myControl" matInput [matAutocomplete]="auto">
                 <input type="hidden" formControlName="itemId">
-                <mat-autocomplete #auto="matAutocomplete">
-                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option.name"
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option"
                         (click)="setItemId(option.itemId)">
-                        <b>{{option.name}}</b><span style="float:right">{{option.unitPrice | currency}}</span>
+                        {{option.name}}
                     </mat-option>
                 </mat-autocomplete>
             </mat-form-field>
         </mat-card-content>
     </mat-card>
+</form>
+<form *ngIf="cartForm!=undefined" [formGroup]="cartForm" autocomplete="off" novalidate (ngSubmit)="submit()">
     <mat-card *ngIf="showQuantity">
         <mat-card-header>
-            <div mat-card-avatar class="example-header-image"></div>
             <mat-card-title>{{selectedProduct.name}}</mat-card-title>
         </mat-card-header>
         <img mat-card-image [src]="selectedProduct.image" alt="Photo of a Shiba Inu">
@@ -31,7 +34,8 @@
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Enter No. of {{selectedMeasureTypes.displayName}}</mat-label>
-                <input type="text" matInput formControlName="quantity" (change)="onQuantityChanged($event)">
+                <input type="text" matInput formControlName="quantity" id="txtQuantity"
+                    (change)="onQuantityChanged($event)">
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Total Amount</mat-label>
@@ -39,6 +43,43 @@
             </mat-form-field>
         </mat-card-content>
     </mat-card>
-    <div style="margin: 10px;" class="text-center" id="singleSmartButton"></div>
-    <br>
+    <mat-card *ngIf="showDelivery">
+        <mat-card-header>
+            <mat-card-title>Delivery Method</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-form-field appearance="fill">
+                <mat-label>Type</mat-label>
+                <mat-select formControlName="deliveryMethod" id="txtDeliveryType" required
+                    (selectionChange)="onDeliveryMethodChanged($event)">
+                    <mat-option value="Pick-up">Pick-up</mat-option>
+                    <mat-option value="Delivery">Delivery</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field *ngIf="isChangeAddressMode" appearance="outline">
+                <mat-label>Search Delivery Address</mat-label>
+                <input matInput formControlName="address" autocomplete="off" id="searchAddress" type="text" #searchAddress>
+            </mat-form-field>
+        </mat-card-content>
+    </mat-card>
+    <mat-card *ngIf="showCustomer">
+        <mat-card-header>
+            <mat-card-title>Customer Info</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-form-field appearance="outline">
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="customerName" id="customerName" type="text">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Mobile Number</mat-label>
+                <input matInput formControlName="mobileNumber" type="tel">
+            </mat-form-field>
+        </mat-card-content>
+    </mat-card>
 </form>
+<div style="margin: 10px;" class="text-center" id="singleSmartButton"></div>
+<br>
+<br>
+<br>
+<br>

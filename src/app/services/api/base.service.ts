@@ -83,7 +83,8 @@ export class BaseService {
     if (requestType === undefined || requestType == null) {
       requestType = RequestType.Post;
     }
-    const url = environment.apiUrl + actionPath + (environment.production ? '' : '.json');
+    //const url = environment.apiUrl + actionPath + (environment.production ? '' : '.json');
+    const url = environment.apiUrl + actionPath + ".json";
     this.getHeaderToken(requestType);
     if (requestType === RequestType.Post) {
       return this.post(url, model);

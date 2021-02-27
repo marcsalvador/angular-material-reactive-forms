@@ -1,10 +1,10 @@
 declare const require: any;
 
 export const environment = {
-  production: true,
+  production: false,
   appCode: "en-us",
-  apiUrl: "-.-",
-  appUrl: "-.-",
+  apiUrl: "https://marcsalvador.github.io/angular-material-reactive-forms/assets/mockdata/",
+  appUrl: "https://marcsalvador.github.io/angular-material-reactive-forms/",
   package: require('../../package.json'),
   paypal: {
     mode: 'production',

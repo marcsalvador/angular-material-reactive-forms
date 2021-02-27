@@ -18,12 +18,16 @@ import { FrontLayoutComponent } from './front-layout/front-layout.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-
+import { MatSelectModule } from '@angular/material/select';
+import { AgmCoreModule } from '@agm/core';
+import { ThankYouComponent } from './payment/thank-you/thank-you.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
 @NgModule({
   declarations: [
     AppComponent,
     CartComponent,
-    FrontLayoutComponent
+    FrontLayoutComponent,
+    ThankYouComponent
   ],
   imports: [
     BrowserModule,
@@ -41,7 +45,13 @@ import { MatInputModule } from '@angular/material/input';
     MatCardModule,
     MatAutocompleteModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatSelectModule,
+    NgxSpinnerModule,
+    AgmCoreModule.forRoot({
+      apiKey: '[your-google-browser-api-key]',
+      libraries: ['places'],
+    }),
   ],
   providers: [
     FormBuilder

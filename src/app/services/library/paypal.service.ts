@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, Observer } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -29,7 +30,7 @@ export interface ScriptModel {
 }
 
 export class PayPalStyleConfiguration {
-  public layout = 'horizontal';
+  public layout = 'vertical';
   public size =  'small';
   public tagline = false;
   public label = 'paypal';
@@ -44,7 +45,7 @@ export class PaypalService {
 
   private buttons: PayPalButton[] = [];
   private defaultStyleConfig: PayPalStyleConfiguration = {
-    layout: 'horizontal',
+    layout: 'vertical',
     size: 'small',
     tagline: false,
     color: 'blue',
@@ -52,7 +53,8 @@ export class PaypalService {
     label: 'pay'
   };
 
-  constructor() {
+  constructor(
+    public spinner: NgxSpinnerService, public ngZone: NgZone) {
 
   }
 
@@ -173,23 +175,27 @@ export class PaypalService {
         },
 
         onApprove: (data: any, actions: any) => {
-          // data.orderID
-          // proceed paypal payment
+          this.spinner.show();
           return actions.order.capture().then(
             (payment: any) => {
               if (i.successCallback == null || i.successCallback == undefined) {
                 console.log('Your success callback function not yet set.', payment);
                 return;
               }
-              i.successCallback(payment);
+              this.ngZone.run(() => {
+                this.spinner.hide();
+                i.successCallback(payment.orderId);    
+              });
             },
             (error: any) => {
               if (i.errorCallback == null || i.errorCallback == undefined) {
                 console.log('Your success callback function not yet set.', error);
                 return;
               }
-
-              i.errorCallback(error);
+              this.ngZone.run(() => {
+                this.spinner.hide();
+                i.errorCallback(error);   
+              });
               return;
             });
         },
@@ -199,7 +205,7 @@ export class PaypalService {
             console.log('Your success callback function not yet set.', data);
             return;
           }
-          i.cancelCallBack(data);
+          i.cancelCallBack(data); 
           return;
         },
 
@@ -207,7 +213,7 @@ export class PaypalService {
           if (i.errorCallback == null || i.errorCallback == undefined) {
             console.log('Your success callback function not yet set.', data);
             return;
-          }
+          }          
           i.errorCallback(data);
           return;
         },
