@@ -176,6 +176,7 @@ export class CartComponent implements OnInit, AfterViewInit {
         });
       }
       else{
+        this.isChangeAddressMode = false;
         setTimeout(() => {
           document.getElementById("customerName").focus();
           this.showPayPal();

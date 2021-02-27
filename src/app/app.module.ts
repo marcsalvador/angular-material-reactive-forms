@@ -22,6 +22,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { AgmCoreModule } from '@agm/core';
 import { ThankYouComponent } from './payment/thank-you/thank-you.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { environment } from 'src/environments/environment';
 @NgModule({
   declarations: [
     AppComponent,
@@ -49,7 +50,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     MatSelectModule,
     NgxSpinnerModule,
     AgmCoreModule.forRoot({
-      apiKey: '[your-google-browser-api-key]',
+      apiKey: environment.googleBrowserKey,
       libraries: ['places'],
     }),
   ],
