@@ -23,12 +23,14 @@ import { AgmCoreModule } from '@agm/core';
 import { ThankYouComponent } from './payment/thank-you/thank-you.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { environment } from 'src/environments/environment';
+import { ProductsComponent } from './products/products.component';
 @NgModule({
   declarations: [
     AppComponent,
     CartComponent,
     FrontLayoutComponent,
-    ThankYouComponent
+    ThankYouComponent,
+    ProductsComponent
   ],
   imports: [
     BrowserModule,

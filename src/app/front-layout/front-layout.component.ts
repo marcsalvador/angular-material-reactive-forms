@@ -3,6 +3,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { ItemService } from '../services/api/item.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-front-layout',
@@ -22,6 +23,7 @@ export class FrontLayoutComponent {
   categories: any[];
 
   constructor(
+    private router: Router,
     private breakpointObserver: BreakpointObserver,
     private itemService: ItemService) {
     this.itemService.GetCategories()
@@ -30,6 +32,10 @@ export class FrontLayoutComponent {
       }, (e) => {
 
       });
+  }
+
+  showItems(categoryId: number) {     
+    this.router.navigate(['/products/'], { queryParams: { id: categoryId } });
   }
 
 }

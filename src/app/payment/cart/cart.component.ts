@@ -7,7 +7,7 @@ import { ItemService } from 'src/app/services/api/item.service';
 import { PayPalButton, PayPalItem, PaypalService } from 'src/app/services/library/paypal.service';
 import { StringService } from 'src/app/services/library/string.service';
 import { MapsAPILoader } from '@agm/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 // eslint-disable-next-line no-unused-vars
@@ -15,11 +15,12 @@ declare const google: any;
 
 export class Product {
   public name: string;
-  public itemId: number;
+  public productId: number;
   public measureTypeId: number;
   public unitPrice: number;
   public image: string;
   public description: string;
+  public categoryId: number;
 }
 
 @Component({
@@ -30,7 +31,7 @@ export class Product {
 export class CartComponent implements OnInit, AfterViewInit {
 
   public cartForm!: FormGroup;
-  public filteredOptions: Observable<Product[]>;
+  public filteredOptions: Product[];
   products: Product[] = [];
   myControl = new FormControl();
 
@@ -53,6 +54,7 @@ export class CartComponent implements OnInit, AfterViewInit {
 
   constructor(
     public router: Router,
+    public activatedRoute: ActivatedRoute,
     @Inject(forwardRef(() => FrontLayoutComponent)) public app: FrontLayoutComponent,
     public formBuilder: FormBuilder,
     public mapsAPILoader: MapsAPILoader,
@@ -70,7 +72,7 @@ export class CartComponent implements OnInit, AfterViewInit {
           itemName: new FormControl('', [Validators.required]),
           customerName: new FormControl('', [Validators.required]),
           mobileNumber: new FormControl('', [Validators.required]),
-          itemId: new FormControl('', [Validators.required]),
+          productId: new FormControl('', [Validators.required]),
           unitPrice: new FormControl('', [Validators.required]),
           quantity: new FormControl('', [Validators.required]),
           totalPrice: new FormControl(''),
@@ -78,18 +80,19 @@ export class CartComponent implements OnInit, AfterViewInit {
           address: new FormControl('', [Validators.required]),
         },
       );
+      
+    this.getMeasureTypes();
   }
 
   ngAfterViewInit(): void {
-    this.app.pageTitle = 'Search and Pay';
-    this.getProducts();
-    this.getMeasureTypes();
+    this.app.pageTitle = 'Search and Pay';  
   }
 
   getMeasureTypes() {
     this.itemService.GetMeasureTypes()
       .subscribe((d) => {
-        this.measureTypes = d;
+        this.measureTypes = d;  
+        this.getProducts();
       }, (e) => {
       });
   }
@@ -97,13 +100,21 @@ export class CartComponent implements OnInit, AfterViewInit {
   getProducts() {
     this.itemService.GetProducts()
       .subscribe((d) => {
-        this.products = d;
-        this.filteredOptions = this.myControl
-          .valueChanges.pipe(
-            startWith(''),
-            map(value => typeof value === 'string' ? value : value.name),
-            map(name => name ? this._filter(name) : this.products)
-          );
+        this.products = d; 
+        this.activatedRoute.queryParams.subscribe((params) => {
+          this.setproductId(+params['id'])
+        });    
+        this.myControl.valueChanges.subscribe(value => {
+          if (value.length >= 1) {
+            this.itemService.GetProducts().subscribe(response => {
+              this.products = response;
+              this.filteredOptions = this._filter(value);
+            });
+          }
+          else {
+            this.filteredOptions = [];
+          }
+        })
       }, (e) => {
 
       });
@@ -118,17 +129,17 @@ export class CartComponent implements OnInit, AfterViewInit {
     return this.products.filter(option => option.name.toLowerCase().indexOf(filterValue) === 0);
   }
 
-  private getProductByItemId(itemId: number): Product {
-    return this.products.filter(option => option.itemId == itemId)[0];
+  private getProductByproductId(productId: number): Product {
+    return this.products.filter(option => option.productId == productId)[0];
   }
 
-  setItemId(id: number) {
+  setproductId(id: number) {
     const data = this.cartForm.getRawValue();
-    data.itemId = id;
+    data.productId = id;
     data.quantity = '';
     this.cartForm.patchValue(data);
 
-    this.selectedProduct = this.getProductByItemId(id);
+    this.selectedProduct = this.getProductByproductId(id);
     this.selectedMeasureTypes = this.getMeauserTypeByMeasureTypeId(this.selectedProduct.measureTypeId);
     this.showQuantity = true;
     this.totalAmount = 0;
@@ -163,17 +174,18 @@ export class CartComponent implements OnInit, AfterViewInit {
         setTimeout(() => {
           document.getElementById("searchAddress").focus();
         }, 100);
-        this.mapsAPILoader.load().then(() => {
-          const autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement);
-          autocomplete.addListener('place_changed', () => {
-            const place = autocomplete.getPlace();
-            data.address = place.formatted_address;
-            this.cartForm.patchValue(data);
-            if (this.stringService.IsNotEmpty(data.address)) {
-              this.showPayPal();
-            }
-          });
-        });
+        this.showPayPal();
+        // this.mapsAPILoader.load().then(() => {
+        //   const autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement);
+        //   autocomplete.addListener('place_changed', () => {
+        //     const place = autocomplete.getPlace();
+        //     data.address = place.formatted_address;
+        //     this.cartForm.patchValue(data);
+        //     if (this.stringService.IsNotEmpty(data.address)) {
+        //       this.showPayPal();
+        //     }
+        //   });
+        // });
       }
       else{
         this.isChangeAddressMode = false;
@@ -182,7 +194,7 @@ export class CartComponent implements OnInit, AfterViewInit {
           this.showPayPal();
         }, 100);
       }
-    }, 100);
+    }, 300);
   }
 
   submit() {

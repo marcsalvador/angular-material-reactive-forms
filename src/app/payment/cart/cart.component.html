@@ -8,10 +8,10 @@
             <mat-form-field>
                 <mat-label>Search Goods</mat-label>
                 <input type="text" [formControl]="myControl" matInput [matAutocomplete]="auto">
-                <input type="hidden" formControlName="itemId">
-                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option"
-                        (click)="setItemId(option.itemId)">
+                <input type="hidden" formControlName="productId">
+                <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let option of filteredOptions" [value]="option.name"
+                        (click)="setproductId(option.productId)">
                         {{option.name}}
                     </mat-option>
                 </mat-autocomplete>
@@ -57,8 +57,8 @@
                 </mat-select>
             </mat-form-field>
             <mat-form-field *ngIf="isChangeAddressMode" appearance="outline">
-                <mat-label>Search Delivery Address</mat-label>
-                <input matInput formControlName="address" autocomplete="off" id="searchAddress" type="text" #searchAddress>
+                <mat-label>Delivery Address</mat-label>
+                <input matInput formControlName="address" autocomplete="off" id="searchAddress" type="text">
             </mat-form-field>
         </mat-card-content>
     </mat-card>

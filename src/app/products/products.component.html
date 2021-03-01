@@ -1,0 +1,14 @@
+<div style="display: flex; flex-wrap: wrap;flex-direction: row;">
+    <div *ngFor="let selectedProduct of filteredProducts; let i = index" style="width: 50%;">
+    <mat-card>
+        <!-- <img mat-card-image [src]="selectedProduct.image" alt="Photo of a Shiba Inu"> -->
+        <mat-card-content>
+            <div style="height: 150px; width: 100%;" style="background-image: url({{selectedProduct.image}});background-size: cover;background-position: center;"></div>
+            <br><b>{{selectedProduct.name}}</b><span style="float: right;">{{selectedProduct.unitPrice | currency}}</span>
+            <br><br><br>
+            <button mat-raised-button color="primary" (click)="gotToCart(selectedProduct.itemId)" type="button">Buy</button>
+        </mat-card-content>
+    </mat-card>
+
+    </div>
+</div>

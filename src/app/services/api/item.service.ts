@@ -28,6 +28,6 @@ export class ItemService extends BaseService {
   }
   
   GetMeasureTypes(): Observable<any[]> {
-    return this.sendRequest('measureTypes', null, RequestType.Get);
+    return this.sendRequest('measure-types', null, RequestType.Get);
   }
 }

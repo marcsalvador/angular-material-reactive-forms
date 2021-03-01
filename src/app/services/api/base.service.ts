@@ -41,6 +41,7 @@ export class BaseService {
     if (requestType === RequestType.Get) {
       contentType = 'application/x-www-form-urlencoded';
     }
+    
     // User Authentication
     let authorization = '';
     // if (this.stringService.IsNotEmpty(this.storageService.getItem(AppConstants.Token))) {
@@ -75,7 +76,7 @@ export class BaseService {
   }
 
   getContent(fileName: string): Observable<any> {
-    const url = environment.appUrl + 'assets/content/' + environment.appCode + '/' + fileName;
+    const url = environment.appUrl + 'assets/content/' + environment.apiUrl + '/' + fileName;
     return this.http.get(url, { responseType: 'text' });
   }
 
@@ -83,8 +84,7 @@ export class BaseService {
     if (requestType === undefined || requestType == null) {
       requestType = RequestType.Post;
     }
-    //const url = environment.apiUrl + actionPath + (environment.production ? '' : '.json');
-    const url = environment.apiUrl + actionPath + ".json";
+    const url = (environment.isMock ? environment.mockUrl : environment.apiUrl) + actionPath + (environment.isMock ? '.json' : '');
     this.getHeaderToken(requestType);
     if (requestType === RequestType.Post) {
       return this.post(url, model);
